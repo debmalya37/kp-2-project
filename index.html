@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage with Iframe and Form</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .left {
+            width: 40%; /* Iframe takes up 40% of the width */
+            height: 100%;
+        }
+
+        .right {
+            width: 60%; /* Form takes up 60% of the width */
+            padding: 20px;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left">
+        <iframe src="https://www.google.com/webhp?igu=1"></iframe>
+    </div>
+    <div class="right">
+        <h2>User Details Form</h2>
+        <form id="userForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="userid">User ID:</label>
+                <input type="text" id="userid" name="userid" required>
+            </div>
+            <div class="form-group">
+                <label for="links">Links (Comma-separated):</label>
+                <textarea id="links" name="links" rows="3" required></textarea>
+            </div>
+            <button type="submit">Export to Excel</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+    document.getElementById('userForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get form values
+        const username = document.getElementById('username').value;
+        const userid = document.getElementById('userid').value;
+        const links = document.getElementById('links').value;
+
+        // Prepare data for Excel
+        const data = [
+            ["Username", "User ID", "Links"],
+            [username, userid, links]
+        ];
+
+        // Create a new workbook and sheet
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+        // Append the sheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, "User Details");
+
+        // Export the workbook as an Excel file
+        XLSX.writeFile(workbook, "user_details.xlsx");
+    });
+</script>
+
+</body>
+</html>
